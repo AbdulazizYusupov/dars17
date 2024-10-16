@@ -81,11 +81,18 @@ use App\Models\Task;
                             <?php
                             $sql = "SELECT * FROM tasks WHERE status = 0";
                             $tasks = Task::query($sql);
-                            
+
                             foreach ($tasks as $task) { ?>
                                 <form action="" method="GET">
                                     <input type="hidden" name="id" value="<?= $task->id ?>">
-                                    <button class="btn btn-primary m-2" name="nol" for="btncheck1"><?= $task->title ?></>
+                                    <div class="card" style="width: 15rem;">
+                                        <img src="../../img/<?= $task->image ?>" class="card-img-top" alt="">
+                                        <div class="card-body">
+                                            <h5 class="card-title"><?= $task->title ?></h5>
+                                            <p class="card-text"><?= $task->description ?></p>
+                                            <button name="nol" class="btn btn-primary">Go start</button>
+                                        </div>
+                                    </div>
                                 </form>
                                 <?php
                             } ?>
@@ -109,7 +116,14 @@ use App\Models\Task;
                             foreach ($tasks as $task) { ?>
                                 <form action="" method="GET">
                                     <input type="hidden" name="id" value="<?= $task->id ?>">
-                                    <button class="btn btn-primary m-2" name="one" for="btncheck1"><?= $task->title ?></>
+                                    <div class="card" style="width: 15rem;">
+                                        <img src="../../img/<?= $task->image ?>" class="card-img-top" alt="">
+                                        <div class="card-body">
+                                            <h5 class="card-title"><?= $task->title ?></h5><br>
+                                            <p class="card-text"><?= $task->description ?></p>
+                                            <button name="one" class="btn btn-primary">Go progress</button>
+                                        </div>
+                                    </div>
                                 </form>
                                 <?php
                             } ?>
@@ -133,7 +147,14 @@ use App\Models\Task;
                             foreach ($tasks as $task) { ?>
                                 <form action="" method="GET">
                                     <input type="hidden" name="id" value="<?= $task->id ?>">
-                                    <button class="btn btn-primary m-2" name="two" for="btncheck1"><?= $task->title ?></>
+                                    <div class="card" style="width: 15rem;">
+                                        <img src="../../img/<?= $task->image ?>" class="card-img-top" alt="">
+                                        <div class="card-body">
+                                            <h5 class="card-title"><?= $task->title ?></h5><br>
+                                            <p class="card-text"><?= $task->description ?></p>
+                                            <button name="two" class="btn btn-primary">Go done</button>
+                                        </div>
+                                    </div>
                                 </form>
                                 <?php
                             } ?>
@@ -147,7 +168,7 @@ use App\Models\Task;
                         </div>
                         <div class="card-body">
                             <?php
-                            
+
                             if (isset($_GET['two']) && isset($_GET['id'])) {
                                 $id = $_GET['id'];
                                 $sql = "UPDATE tasks SET status = 3 WHERE id = $id";
@@ -155,9 +176,15 @@ use App\Models\Task;
                             }
                             $sql = "SELECT * FROM tasks WHERE status = 3";
                             $tasks = Task::query($sql);
-                            
+
                             foreach ($tasks as $task) { ?>
-                                <label class="btn btn-primary m-2" for="btncheck1"><?= $task->title ?></label>
+                                <div class="card" style="width: 15rem;">
+                                    <img src="../../img/<?= $task->image ?>" class="card-img-top" alt="">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><?= $task->title ?></h5><br>
+                                        <p class="card-text"><?= $task->description ?></p>
+                                    </div>
+                                </div>
                                 <?php
                             } ?>
                         </div>

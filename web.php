@@ -15,3 +15,5 @@ Route::post('/login',[Authcontroller::class, 'login']);
 Route::post('/register',[Authcontroller::class, 'register']);
 
 Route::post('/task',[Authcontroller::class,'task']);
+Route::get('/members',[Admincontroller::class,'members']);
+Route::post('/status',[Admincontroller::class,'status']);

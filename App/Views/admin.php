@@ -47,20 +47,51 @@ use App\Models\User;
       <img class="animation__shake" src="../../App/public/dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60"
         width="60">
     </div>
-
-    <!-- Main Sidebar Container -->
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
+      <a href="/user" class="brand-link">
+        <img src="../../App/public/dist/img/AdminLTELogo.png" alt="AdminLTE Logo"
+          class="brand-image img-circle elevation-3" style="opacity: .8">
+        <span class="brand-text font-weight-light">AdminLTE 3</span>
+      </a>
       <div class="sidebar">
-        <!-- Sidebar Menu -->
+        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+          <div class="image">
+            <img src="../../App/public/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+          </div>
+          <div class="info">
+            <a href="/admin" class="d-block">Admin</a>
+          </div>
+        </div>
+
         <nav class="mt-2">
           <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
             <li class="nav-item menu-open">
+              <a href="/admin" class="nav-link active">
+                <i class="nav-icon fas fa-tachometer-alt"></i>
+                <p>
+                  Tasks
+                </p>
+              </a>
+            </li>
+            <li class="nav-item menu-open">
+              <a href="/members" class="nav-link active">
+                <i class="nav-icon fas fa-user-alt"></i>
+                <p>
+                  Users
+                </p>
+              </a>
+            </li>
+            <li class="nav-item">
               <a href="/login" class="nav-link active">
-                Logout
+                <i class="fas fa-sign-out-alt"></i>
+                <p>
+                  Logout
+                </p>
               </a>
             </li>
           </ul>
         </nav>
+      </div>
     </aside>
 
     <div class="content-wrapper">
@@ -155,7 +186,8 @@ use App\Models\User;
             <div class="row">
               <div class="col-3">
                 <!-- Button trigger modal -->
-                <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal"
+                  data-bs-target="#exampleModal">
                   AddTask
                 </button>
 

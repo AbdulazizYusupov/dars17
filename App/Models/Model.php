@@ -127,6 +127,12 @@ class Model extends Database
         $query = self::connect()->query($sql);
         return $query->fetchAll(PDO::FETCH_ASSOC);
     }
+    public static function status(int $id, $status)
+    {
+        $sql = "UPDATE users SET status = '{$status}' WHERE id = '{$id}'";
+        $query = self::connect()->query($sql);
+        return $query->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
 
 ?>

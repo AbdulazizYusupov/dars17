@@ -8,11 +8,9 @@ class AdminController
 {
     public function __construct()
     {
-        // dd('user', Auth::check());
         if (!Auth::check()) {
             header('location: /login');
         }
-        layout('admin');
     }
     public function admin()
     {
@@ -29,48 +27,23 @@ class AdminController
         $models = User::all();
         return view('user/task', 'tasks', $models);
     }
-    public function create()
+    public function members()
     {
-        if (isset($_POST['ok'])) {
-            $data = [
-                'name' => $_POST['name'],
-            ];
-            User::create($data);
-            header('location: /janr');
-        }
+        return view('members', 'Users');
     }
-    public function delete()
+    public function status()
     {
-        if (isset($_POST['ok'])) {
+        if (isset($_POST['true'])) {
             $id = $_POST['id'];
-            User::delete($id);
-            header('location: /janr');
-        }
-    }
-    public function show()
-    {
-        if (isset($_POST['ok'])) {
+            $users = User::status($id,0);
+            header('location: /members');
+
+        } elseif (isset($_POST['false'])) {
             $id = $_POST['id'];
-            $models = User::show($id);
-            return view('Janr/show', 'Show', $models);
+            $users = User::status($id,1);
+            header('location: /members');
+
         }
-    }
-    public function edit()
-    {
-        if (isset($_POST['ok'])) {
-            $id = $_POST['id'];
-            $models = User::show($id);
-            return view('Janr/edit', 'Edit', $models);
-        }
-    }
-    public function update()
-    {
-        if (isset($_POST['ok'])) {
-            $id = $_POST['id'];
-            $name = $_POST['name'];
-            user::update($id, $name);
-        }
-        header('location: /janr');
     }
 }
 
