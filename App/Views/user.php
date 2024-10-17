@@ -1,6 +1,6 @@
 <?php
 if (!isset($_SESSION['Auth']) || $_SESSION['Auth']->role != 'user') {
-    header('location: /login');
+    header('location: /');
 }
 use App\Models\Task;
 
@@ -48,8 +48,8 @@ use App\Models\Task;
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                         data-accordion="false">
-                        <li class="nav-item menu-open">
-                            <a href="/user" class="nav-link active">
+                        <li class="nav-item">
+                            <a href="/user" class="nav-link">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>
                                     Tasks
@@ -57,7 +57,7 @@ use App\Models\Task;
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="/login" class="nav-link active">
+                            <a href="/" class="nav-link">
                                 <p>
                                     Logout
                                 </p>
@@ -70,128 +70,135 @@ use App\Models\Task;
 
         <div class="content-wrapper kanban">
             <section class="content p-5">
-                <div class="container h-100">
-                    <div class="card card-row card-secondary">
-                        <div class="card-header">
-                            <h3 class="card-title">
-                                Tasks
-                            </h3>
-                        </div>
-                        <div class="card-body">
-                            <?php
-                            $sql = "SELECT * FROM tasks WHERE status = 0";
-                            $tasks = Task::query($sql);
-
-                            foreach ($tasks as $task) { ?>
-                                <form action="" method="GET">
-                                    <input type="hidden" name="id" value="<?= $task->id ?>">
-                                    <div class="card" style="width: 15rem;">
-                                        <img src="../../img/<?= $task->image ?>" class="card-img-top" alt="">
-                                        <div class="card-body">
-                                            <h5 class="card-title"><?= $task->title ?></h5>
-                                            <p class="card-text"><?= $task->description ?></p>
-                                            <button name="nol" class="btn btn-primary">Go start</button>
-                                        </div>
-                                    </div>
-                                </form>
+                <?php if ($_SESSION['Auth']->status == 1) { ?>
+                    <div class="container h-100">
+                        <div class="card card-row card-secondary">
+                            <div class="card-header">
+                                <h3 class="card-title">
+                                    Tasks
+                                </h3>
+                            </div>
+                            <div class="card-body">
                                 <?php
-                            } ?>
+                                $user_id = $_SESSION['Auth']->id;
+                                $sql = "SELECT * FROM tasks WHERE status = 0 AND user_id = {$user_id}";
+                                $tasks = Task::query($sql);
+
+                                foreach ($tasks as $task) { ?>
+                                    <form action="" method="GET">
+                                        <input type="hidden" name="id" value="<?= $task->id ?>">
+                                        <div class="card" style="width: 15rem;">
+                                            <img src="../../img/<?= $task->image ?>" class="card-img-top" alt="">
+                                            <div class="card-body">
+                                                <h3><?= $task->title ?></h3>
+                                                <h6>Comment: <?= $task->comments ?></h6>
+                                                <button name="nol" class="btn btn-primary">Go start</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                <?php } ?>
+                            </div>
                         </div>
-                    </div>
-                    <div class="card card-row card-primary">
-                        <div class="card-header">
-                            <h3 class="card-title">
-                                Start
-                            </h3>
+                        <div class="card card-row card-primary">
+                            <div class="card-header">
+                                <h3 class="card-title">
+                                    Start
+                                </h3>
+                            </div>
+                            <div class="card-body">
+                                <?php
+                                $user_id = $_SESSION['Auth']->id;
+                                if (isset($_GET['nol']) && isset($_GET['id'])) {
+                                    $id = $_GET['id'];
+                                    $sql = "UPDATE tasks SET status = 1 WHERE id = $id";
+                                    Task::query($sql);
+                                }
+                                $sql = "SELECT * FROM tasks WHERE status = 1 AND user_id = {$user_id}";
+                                $tasks = Task::query($sql);
+                                foreach ($tasks as $task) { ?>
+                                    <form action="" method="GET">
+                                        <input type="hidden" name="id" value="<?= $task->id ?>">
+                                        <div class="card" style="width: 15rem;">
+                                            <img src="../../img/<?= $task->image ?>" class="card-img-top" alt="">
+                                            <div class="card-body">
+                                                <h5 class="card-title"><?= $task->title ?></h5><br>
+                                                <p class="card-text"><?= $task->comments ?></p>
+                                                <button name="one" class="btn btn-primary">Go progress</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <?php
+                                } ?>
+                            </div>
                         </div>
-                        <div class="card-body">
-                            <?php
-                            if (isset($_GET['nol']) && isset($_GET['id'])) {
-                                $id = $_GET['id'];
-                                $sql = "UPDATE tasks SET status = 1 WHERE id = $id";
-                                Task::query($sql);
-                            }
-                            $sql = "SELECT * FROM tasks WHERE status = 1";
-                            $tasks = Task::query($sql);
-                            foreach ($tasks as $task) { ?>
-                                <form action="" method="GET">
-                                    <input type="hidden" name="id" value="<?= $task->id ?>">
+                        <div class="card card-row card-default">
+                            <div class="card-header bg-info">
+                                <h3 class="card-title">
+                                    In Progress
+                                </h3>
+                            </div>
+                            <div class="card-body">
+                                <?php
+                                $user_id = $_SESSION['Auth']->id;
+                                if (isset($_GET['one']) && isset($_GET['id'])) {
+                                    $id = $_GET['id'];
+                                    $sql = "UPDATE tasks SET status = 2 WHERE id = $id";
+                                    Task::query($sql);
+                                }
+                                $sql = "SELECT * FROM tasks WHERE status = 2 AND user_id = {$user_id}";
+                                $tasks = Task::query($sql);
+                                foreach ($tasks as $task) { ?>
+                                    <form action="" method="GET">
+                                        <input type="hidden" name="id" value="<?= $task->id ?>">
+                                        <div class="card" style="width: 15rem;">
+                                            <img src="../../img/<?= $task->image ?>" class="card-img-top" alt="">
+                                            <div class="card-body">
+                                                <h5 class="card-title"><?= $task->title ?></h5><br>
+                                                <p class="card-text"><?= $task->comments ?></p>
+                                                <button name="two" class="btn btn-primary">Go done</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <?php
+                                } ?>
+                            </div>
+                        </div>
+                        <div class="card card-row card-success">
+                            <div class="card-header">
+                                <h3 class="card-title">
+                                    Done
+                                </h3>
+                            </div>
+                            <div class="card-body">
+                                <?php
+                                $user_id = $_SESSION['Auth']->id;
+                                if (isset($_GET['two']) && isset($_GET['id'])) {
+                                    $id = $_GET['id'];
+                                    $sql = "UPDATE tasks SET status = 3 WHERE id = $id";
+                                    Task::query($sql);
+                                }
+                                $sql = "SELECT * FROM tasks WHERE status = 3 AND user_id = {$user_id}";
+                                $tasks = Task::query($sql);
+
+                                foreach ($tasks as $task) { ?>
                                     <div class="card" style="width: 15rem;">
                                         <img src="../../img/<?= $task->image ?>" class="card-img-top" alt="">
                                         <div class="card-body">
                                             <h5 class="card-title"><?= $task->title ?></h5><br>
-                                            <p class="card-text"><?= $task->description ?></p>
-                                            <button name="one" class="btn btn-primary">Go progress</button>
+                                            <p class="card-text"><?= $task->comments ?></p>
                                         </div>
                                     </div>
-                                </form>
-                                <?php
-                            } ?>
+                                    <?php
+                                } ?>
+                            </div>
                         </div>
                     </div>
-                    <div class="card card-row card-default">
-                        <div class="card-header bg-info">
-                            <h3 class="card-title">
-                                In Progress
-                            </h3>
-                        </div>
-                        <div class="card-body">
-                            <?php
-                            if (isset($_GET['one']) && isset($_GET['id'])) {
-                                $id = $_GET['id'];
-                                $sql = "UPDATE tasks SET status = 2 WHERE id = $id";
-                                Task::query($sql);
-                            }
-                            $sql = "SELECT * FROM tasks WHERE status = 2";
-                            $tasks = Task::query($sql);
-                            foreach ($tasks as $task) { ?>
-                                <form action="" method="GET">
-                                    <input type="hidden" name="id" value="<?= $task->id ?>">
-                                    <div class="card" style="width: 15rem;">
-                                        <img src="../../img/<?= $task->image ?>" class="card-img-top" alt="">
-                                        <div class="card-body">
-                                            <h5 class="card-title"><?= $task->title ?></h5><br>
-                                            <p class="card-text"><?= $task->description ?></p>
-                                            <button name="two" class="btn btn-primary">Go done</button>
-                                        </div>
-                                    </div>
-                                </form>
-                                <?php
-                            } ?>
-                        </div>
-                    </div>
-                    <div class="card card-row card-success">
-                        <div class="card-header">
-                            <h3 class="card-title">
-                                Done
-                            </h3>
-                        </div>
-                        <div class="card-body">
-                            <?php
-
-                            if (isset($_GET['two']) && isset($_GET['id'])) {
-                                $id = $_GET['id'];
-                                $sql = "UPDATE tasks SET status = 3 WHERE id = $id";
-                                Task::query($sql);
-                            }
-                            $sql = "SELECT * FROM tasks WHERE status = 3";
-                            $tasks = Task::query($sql);
-
-                            foreach ($tasks as $task) { ?>
-                                <div class="card" style="width: 15rem;">
-                                    <img src="../../img/<?= $task->image ?>" class="card-img-top" alt="">
-                                    <div class="card-body">
-                                        <h5 class="card-title"><?= $task->title ?></h5><br>
-                                        <p class="card-text"><?= $task->description ?></p>
-                                    </div>
-                                </div>
-                                <?php
-                            } ?>
-                        </div>
-                    </div>
-                </div>
+                <?php } else {
+                    echo "Sizning statuzingiz yopiq, Iltimos admin statuzingizni ochishini kuting";
+                } ?>
             </section>
         </div>
+
         <aside class="control-sidebar control-sidebar-dark"></aside>
     </div>
 

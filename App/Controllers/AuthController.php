@@ -42,7 +42,7 @@ class Authcontroller
             }
         } else {
             $_SESSION['message'] = 'email or password incorrect';
-            header('location: /login');
+            header('location: /');
         }
     }
 
@@ -69,7 +69,7 @@ class Authcontroller
                     $user = User::createUser($data);
 
                     if ($user) {
-                        header("location: /login");
+                        header("location: /");
                     }
                     header('location: /register');
                 }

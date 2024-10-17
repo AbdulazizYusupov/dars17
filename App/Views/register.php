@@ -40,7 +40,7 @@ if (isset($_SESSION['text'])) {
     </form>
 
     <p class="mb-0">
-      <a href="/login" class="text-center">Already have a membership</a>
+      <a href="/" class="text-center">Already have a membership</a>
     </p>
   </div>
   <!-- /.login-card-body -->

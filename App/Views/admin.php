@@ -1,9 +1,10 @@
 <?php
 if (!isset($_SESSION['Auth']) || $_SESSION['Auth']->role != 'admin') {
-  header('location: /login');
+  header('location: /');
 }
 use App\Models\Task;
 use App\Models\User;
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -65,16 +66,16 @@ use App\Models\User;
 
         <nav class="mt-2">
           <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-            <li class="nav-item menu-open">
-              <a href="/admin" class="nav-link active">
+            <li class="nav-item">
+              <a href="/admin" class="nav-link">
                 <i class="nav-icon fas fa-tachometer-alt"></i>
                 <p>
                   Tasks
                 </p>
               </a>
             </li>
-            <li class="nav-item menu-open">
-              <a href="/members" class="nav-link active">
+            <li class="nav-item">
+              <a href="/members" class="nav-link">
                 <i class="nav-icon fas fa-user-alt"></i>
                 <p>
                   Users
@@ -82,7 +83,7 @@ use App\Models\User;
               </a>
             </li>
             <li class="nav-item">
-              <a href="/login" class="nav-link active">
+              <a href="/" class="nav-link">
                 <i class="fas fa-sign-out-alt"></i>
                 <p>
                   Logout
@@ -107,7 +108,7 @@ use App\Models\User;
         <section class="content">
           <div class="container-fluid">
             <div class="row">
-              <div class="col-lg-3 col-6">
+              <div class="col-lg-2 col-6">
                 <div class="small-box bg-info">
                   <div class="inner">
                     <?php
@@ -123,17 +124,15 @@ use App\Models\User;
                       class="fas fa-arrow-circle-right"></i></a>
                 </div>
               </div>
-              <!-- ./col -->
-              <div class="col-lg-3 col-6">
-                <!-- small box -->
-                <div class="small-box bg-success">
+              <div class="col-lg-2 col-6">
+                <div class="small-box bg-primary">
                   <div class="inner">
                     <?php
                     $count1 = count(Task::taskall(1));
                     ?>
                     <h3><?php echo $count1; ?><sup style="font-size: 20px"></sup></h3>
 
-                    <p>Accepted tasks <?php echo $count1; ?> </p>
+                    <p>Started <?php echo $count1; ?> </p>
                   </div>
                   <div class="icon">
                     <i class="ion ion-stats-bars"></i>
@@ -142,9 +141,7 @@ use App\Models\User;
                       class="fas fa-arrow-circle-right"></i></a>
                 </div>
               </div>
-              <!-- ./col -->
-              <div class="col-lg-3 col-6">
-                <!-- small box -->
+              <div class="col-lg-2 col-6">
                 <div class="small-box bg-warning">
                   <div class="inner">
                     <?php
@@ -161,9 +158,7 @@ use App\Models\User;
                       class="fas fa-arrow-circle-right"></i></a>
                 </div>
               </div>
-              <!-- ./col -->
-              <div class="col-lg-3 col-6">
-                <!-- small box -->
+              <div class="col-lg-3">
                 <div class="small-box bg-danger">
                   <div class="inner">
                     <?php
@@ -179,7 +174,22 @@ use App\Models\User;
                       class="fas fa-arrow-circle-right"></i></a>
                 </div>
               </div>
-              <!-- ./col -->
+              <div class="col-lg-3 col-6">
+                <div class="small-box bg-success">
+                  <div class="inner">
+                    <?php
+                    $count4 = count(Task::taskall(4));
+                    ?>
+                    <h3><?php echo $count4; ?></h3>
+                    <p>Accepted <?php echo $count4; ?></p>
+                  </div>
+                  <div class="icon">
+                    <i class="ion-checkmark"></i>
+                  </div>
+                  <a href="/admin?task5=4" class="small-box-footer">More info <i
+                      class="fas fa-arrow-circle-right"></i></a>
+                </div>
+              </div>
             </div>
             <!-- /.row -->
             <!-- Main row -->
@@ -219,10 +229,11 @@ use App\Models\User;
                             <?php
 
                             $users = User::all();
-                            foreach ($users as $user) { ?>
-                              <option selected value="<?= $user->id ?>"><?= $user->name ?></option>
-                            <?php }
-                            ?>
+                            foreach ($users as $user) {
+                              if ($user->name != $_SESSION['Auth']->name && $user->status != 0) { ?>
+                                <option selected value="<?= $user->id ?>"><?= $user->name ?></option>
+                              <?php }
+                            } ?>
                           </select>
                           <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -255,11 +266,11 @@ use App\Models\User;
                   } elseif (isset($_GET['task4'])) {
                     $tasks = Task::taskall(3);
                   } else {
-                    $tasks = Task::taskall(0);
+                    $tasks = Task::taskall(4);
                   }
                   foreach ($tasks as $task) { ?>
-                    <tr>
-                      <td style="border: 1px solid black; padding: 10px;"><?= $task['id'] ?></td>
+                    <t>
+                      <th style="border: 1px solid black; padding: 10px;"><?= $task['id'] ?></th>
                       <td style="border: 1px solid black; padding: 10px;"><?= $task['title'] ?></td>
                       <td style="border: 1px solid black; padding: 10px;"><?= $task['description'] ?></td>
                       <td style="border: 1px solid black; padding: 10px;"><img src="<?php echo "img/" . $task['image'] ?>"
@@ -267,24 +278,49 @@ use App\Models\User;
                       <td style="border: 1px solid black; padding: 10px;"><?= $task['name'] ?></td>
                       <td style="border: 1px solid black; padding: 10px;">
                         <?php
-                        $color = ($task['status'] == 0) ? '#2196F3' : (($task['status'] == 1) ? '#FFC107' : (($task['status'] == 2) ? '#4CAF50' : '#FF5722'));
+                        $color = ($task['status'] == 0) ? '#2196F3' : (($task['status'] == 1) ? '#4CAF50' : (($task['status'] == 2) ? '#FFC107' : '#FF5722'));
                         ?>
-
-                        <span style="
-    background-color: <?php echo $color; ?>; /* Statusga qarab fon rangi */
-    color: white; /* Oq rangli matn */
-    padding: 5px 10px; /* Ichki chekka (padding) */
-    border-radius: 5px; /* Burchaklarni yumaloqlash */
-    text-align: center; /* Matnni markazlash */
-    display: inline-block; /* Elementning tugma ko'rinishda bo'lishi uchun */
-  ">
-                          <?php
-                          echo ($task['status'] == 0) ? 'Vazifa berilgan' : (($task['status'] == 1) ? 'Qabul qilingan' : (($task['status'] == 2) ? 'Topshirilgan' : 'Jarayonda'));
-                          ?>
-                        </span>
+                        <?php
+                        if ($task['status'] == 0) { ?>
+                          <button class="btn btn-info">Given tasks</button>
+                        <?php } elseif ($task['status'] == 1) { ?>
+                          <button class="btn btn-primary">Accepted</button>
+                        <?php } elseif ($task['status'] == 2) { ?>
+                          <button class="btn btn-warning">In progress</button>
+                        <?php } elseif ($task['status'] == 3) { ?>
+                          <button type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#check">
+                            Check
+                          </button>
+                          <div class="modal fade" id="check" tabindex="-1" aria-labelledby="exampleModalLabel"
+                            aria-hidden="true">
+                            <div class="modal-dialog">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h1 class="modal-title fs-5" id="exampleModalLabel">Accepting</h1>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                                </div>
+                                <form action="" method="POST">
+                                  <div class="modal-body">
+                                    <input type="hidden" name="id" value="<?= $task['id'] ?>">
+                                    <textarea name="comment" placeholder="Not neccesory"></textarea>
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-success" name="accept">Accept</button>
+                                    <button type="submit" class="btn btn-danger" name="reject"
+                                      class="btn btn-primary">Reject</button>
+                                  </div>
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+                        <?php } else { ?>
+                          <button class="btn btn-success">Done</button>
+                        <?php } ?>
                       </td>
-                    </tr>
-                  <?php }
+                      </tr>
+                    <?php }
                   ?>
                 </table>
               </div>
@@ -292,6 +328,29 @@ use App\Models\User;
             <aside class="control-sidebar control-sidebar-dark">
             </aside>
           </div>
+          <?php
+          if (isset($_POST['accept'])) {
+            $id = $_POST['id'];
+            if (!empty($_POST['comment'])) {
+              $comment = $_POST['comment'];
+              $sql0 = "UPDATE tasks SET comments = '{$comment}' WHERE id = {$id}";
+              Task::query($sql0);
+            }
+            $sql = "UPDATE tasks SET status = 4 WHERE id = {$id}";
+            Task::query($sql);
+            header('location: /admin');
+          } elseif (isset($_POST['reject'])) {
+            $id = $_POST['id'];
+            if (!empty($_POST['comment'])) {
+              $comment = $_POST['comment'];
+              $sql1 = "UPDATE tasks SET comments = '{$comment}' WHERE id = {$id}";
+              Task::query($sql1);
+            }
+            $sql = "UPDATE tasks SET status = 0 WHERE id = {$id}";
+            Task::query($sql);
+            header('location: /admin');
+          }
+          ?>
 
           <!-- jQuery -->
           <script src="../../App/public/plugins/jquery/jquery.min.js"></script>

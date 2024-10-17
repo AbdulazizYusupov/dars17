@@ -8,9 +8,8 @@ class UserController
 {
     public function __construct()
     {
-        // dd('user', Auth::check());
         if (!Auth::check()) {
-            header('location: /login');
+            header('location: /');
         }
         layout('user');
     }

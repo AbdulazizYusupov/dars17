@@ -1,9 +1,7 @@
 <?php
 if (!isset($_SESSION['Auth']) || $_SESSION['Auth']->role != 'admin') {
-    header('location: /login');
+    header('location: /');
 }
-
-use App\Models\Task;
 use App\Models\User;
 
 $users = User::all();
@@ -70,16 +68,16 @@ $users = User::all();
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                         data-accordion="false">
-                        <li class="nav-item menu-open">
-                            <a href="/admin" class="nav-link active">
+                        <li class="nav-item">
+                            <a href="/admin" class="nav-link">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>
                                     Tasks
                                 </p>
                             </a>
                         </li>
-                        <li class="nav-item menu-open">
-                            <a href="/users" class="nav-link active">
+                        <li class="nav-item">
+                            <a href="/users" class="nav-link">
                                 <i class="nav-icon fas fa-user-alt"></i>
                                 <p>
                                     Users
@@ -87,7 +85,7 @@ $users = User::all();
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="/login" class="nav-link active">
+                            <a href="/" class="nav-link">
                                 <i class="fas fa-sign-out-alt"></i>
                                 <p>
                                     Logout
@@ -128,30 +126,31 @@ $users = User::all();
                                         <th style="border: 1px solid black; padding: 10px; background-color: #f2f2f2;">
                                             Status</th>
                                     </tr>
-                                    <?php foreach ($users as $user) { ?>
+                                    <?php foreach ($users as $user) {
+                                        if ($user->name != $_SESSION['Auth']->name) { ?>
+                                            <tr>
+                                                <th style="border: 1px solid black; padding: 10px;"><?= $user->id ?></th>
+                                                <td style="border: 1px solid black; padding: 10px;"><?= $user->name ?></td>
+                                                <td style="border: 1px solid black; padding: 10px;"><?= $user->email ?></td>
+                                                <td style="border: 1px solid black; padding: 10px;"><?= $user->password ?></td>
+                                                <td style="border: 1px solid black; padding: 10px;"><?= $user->role ?></td>
+                                                <td style="border: 1px solid black; padding: 10px;">
 
-                                        <tr>
-                                            <th style="border: 1px solid black; padding: 10px;"><?= $user->id ?></th>
-                                            <td style="border: 1px solid black; padding: 10px;"><?= $user->name ?></td>
-                                            <td style="border: 1px solid black; padding: 10px;"><?= $user->email ?></td>
-                                            <td style="border: 1px solid black; padding: 10px;"><?= $user->password ?></td>
-                                            <td style="border: 1px solid black; padding: 10px;"><?= $user->role ?></td>
-                                            <td style="border: 1px solid black; padding: 10px;">
-
-                                                <?php if ($user->status == 1) { ?>
-                                                    <form action="/status" method="POST">
-                                                        <input type="hidden" value="<?= $user->id ?>" name="id">
-                                                        <input type="submit" value="true" name="true" class="btn btn-success">
-                                                    </form>
-                                                <?php } else { ?>
-                                                    <form action="/status" method="POST">
-                                                        <input type="hidden" name="id" value="<?= $user->id ?>">
-                                                        <input type="submit" value="false" name="false" class="btn btn-danger">
-                                                    </form>
-                                                <?php } ?>
-                                            </td>
-                                        </tr>
-                                    <?php } ?>
+                                                    <?php if ($user->status == 1) { ?>
+                                                        <form action="/status" method="POST">
+                                                            <input type="hidden" value="<?= $user->id ?>" name="id">
+                                                            <input type="submit" value="true" name="true" class="btn btn-success">
+                                                        </form>
+                                                    <?php } else { ?>
+                                                        <form action="/status" method="POST">
+                                                            <input type="hidden" name="id" value="<?= $user->id ?>">
+                                                            <input type="submit" value="false" name="false" class="btn btn-danger">
+                                                        </form>
+                                                    <?php } ?>
+                                                </td>
+                                            </tr>
+                                        <?php }
+                                    } ?>
                                 </table>
                             </div>
                         </div>

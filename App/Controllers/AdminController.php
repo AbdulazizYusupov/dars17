@@ -9,7 +9,7 @@ class AdminController
     public function __construct()
     {
         if (!Auth::check()) {
-            header('location: /login');
+            header('location: /');
         }
     }
     public function admin()
